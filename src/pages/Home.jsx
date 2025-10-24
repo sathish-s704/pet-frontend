@@ -20,8 +20,9 @@ function Home() {
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
-        const response = await api.get('/products');
-        setFeaturedProducts(response.data.slice(0, 6)); // Get first 6 products
+          const response = await api.get('/products');
+          let products = Array.isArray(response.data) ? response.data : [];
+          setFeaturedProducts(products.slice(0, 6)); // Get first 6 products
       } catch (error) {
         console.error('Error fetching products:', error);
       } finally {
