@@ -42,7 +42,7 @@ const ProductDetail = () => {
       if (product.imageUrl.startsWith('http')) {
         return product.imageUrl;
       }
-      return `http://localhost:3000/${product.imageUrl.replace(/\\/g, '/')}`;
+      return `${import.meta.env.VITE_API_BASE_URL}/${product.imageUrl.replace(/\\/g, '/')}`;
     }
     return '/pet images/collar.jpeg';
   };

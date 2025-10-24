@@ -200,7 +200,7 @@ function AdminProducts() {
             <tr key={product._id}>
               <td>
                 <img 
-                  src={product.imageUrl ? `http://localhost:3000/${product.imageUrl}` : '/pet images/collar.jpeg'} 
+                  src={product.imageUrl ? `${import.meta.env.VITE_API_BASE_URL}/${product.imageUrl}` : '/pet images/collar.jpeg'} 
                   alt={product.name}
                   width="50" 
                   height="50" 

@@ -68,7 +68,7 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
         return product.imageUrl;
       }
       // Otherwise, construct the URL from the backend uploads directory
-      return `http://localhost:3000/${product.imageUrl.replace(/\\/g, '/')}`;
+      return `${import.meta.env.VITE_API_BASE_URL}/${product.imageUrl.replace(/\\/g, '/')}`;
     }
     // Fallback to a default image or the image property if it exists
     return product.image || '/pet images/collar.jpeg';

@@ -306,7 +306,7 @@ const Profile = () => {
             <Card>
               <Card.Img 
                 variant="top" 
-                src={product.imageUrl ? `http://localhost:3000/${product.imageUrl.replace(/\\/g, '/')}` : '/pet images/collar.jpeg'} 
+                src={product.imageUrl ? `${import.meta.env.VITE_API_BASE_URL}/${product.imageUrl.replace(/\\/g, '/')}` : '/pet images/collar.jpeg'} 
                 onError={(e) => {
                   e.target.src = '/pet images/collar.jpeg';
                 }}
@@ -371,7 +371,7 @@ const Profile = () => {
                 order.products.map((item, idx) => (
                   <div key={idx} className="mb-3 d-flex align-items-center gap-3">
                     <Image 
-                      src={item.product?.imageUrl ? `http://localhost:3000/${item.product.imageUrl.replace(/\\/g, '/')}` : '/pet images/collar.jpeg'} 
+                      src={item.product?.imageUrl ? `${import.meta.env.VITE_API_BASE_URL}/${item.product.imageUrl.replace(/\\/g, '/')}` : '/pet images/collar.jpeg'} 
                       height={60} 
                       width={60} 
                       thumbnail 
