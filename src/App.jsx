@@ -6,6 +6,7 @@ import NavigationBar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Products from './pages/Products';
+import ProductCard from './pages/ProductCard';
 import ProductDetail from './pages/ProductDetail';
 import CartPage from "./pages/CartPage";
 import Checkout from './pages/Checkout';
