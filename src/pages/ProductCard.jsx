@@ -61,18 +61,15 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
   };
 
   // Construct the proper image URL
-  const getImageUrl = () => {
-    if (product.imageUrl) {
-      // If imageUrl is a full path, use it directly
-      if (product.imageUrl.startsWith('http')) {
-        return product.imageUrl;
-      }
-      // Otherwise, construct the URL from the backend uploads directory
-      return `https://pet-accessories-backend-52wp.onrender.com/${product.imageUrl.replace(/\\/g, '/')}`;
+ const getImageUrl = () => {
+  if (product.imageUrl) {
+    if (product.imageUrl.startsWith('http')) {
+      return product.imageUrl;
     }
-    // Fallback to a default image or the image property if it exists
-    return product.image || '/pet images/collar.jpeg';
-  };
+    return `https://pet-accessories-backend-52wp.onrender.com/${product.imageUrl.replace(/\\/g, '/')}`;
+  }
+  return product.image || '/pet images/collar.jpeg';
+};
 
   // Generate star rating display
   const renderStars = () => {
