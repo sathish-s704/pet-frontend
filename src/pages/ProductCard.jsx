@@ -61,15 +61,18 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
   };
 
   // Construct the proper image URL
- const getImageUrl = () => {
+const getImageUrl = () => {
   if (product.imageUrl) {
+    // Handle both absolute URLs and local uploads
     if (product.imageUrl.startsWith('http')) {
       return product.imageUrl;
     }
     return `https://pet-accessories-backend-52wp.onrender.com/${product.imageUrl.replace(/\\/g, '/')}`;
   }
-  return product.image || '/pet images/collar.jpeg';
+  // Fallback image
+  return '/pet images/collar.jpeg';
 };
+
 
   // Generate star rating display
   const renderStars = () => {
