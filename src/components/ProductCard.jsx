@@ -2,6 +2,7 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import api from '../utils/api';
 import './ProductCard.css';
 import { 
   Heart, 
@@ -64,16 +65,18 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
   // Construct the proper image URL
   const getImageUrl = () => {
     if (product.imageUrl) {
-      // If imageUrl is a full path, use it directly
+      // If full URL (for example from Cloudinary), return directly
       if (product.imageUrl.startsWith('http')) {
         return product.imageUrl;
       }
-      // Otherwise, construct the URL from the backend uploads directory
-      const baseUrl = import.meta.env.VITE_API_URL.replace('/api', '');
-      return `${baseUrl}/${product.imageUrl.replace(/\\/g, '/')}`;
+
+      // ✅ Use backend base URL (Render)
+      const backendBaseURL = "https://pet-accessories-backend-52wp.onrender.com";
+      return `${backendBaseURL}/${product.imageUrl.replace(/\\/g, '/')}`;
     }
-    // Fallback to a default image or the image property if it exists
-    return product.image || '/pet images/collar.jpeg';
+
+    // Fallback image
+    return '/pet images/collar.jpeg';
   };
 
   // Generate star rating display
