@@ -7,7 +7,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
-import CartPage from './pages/cartPage';
+import CartPage from './pages/CartPage';
 import Checkout from './pages/Checkout';
 import ProductCheckout from './pages/ProductCheckout';
 import PaymentSuccess from './pages/PaymentSuccess';
