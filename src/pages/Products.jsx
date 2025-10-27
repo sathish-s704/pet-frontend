@@ -51,9 +51,8 @@ function Products() {
       try {
         setLoading(true);
         const response = await api.get('/products');
-  let productsArr = Array.isArray(response.data) ? response.data : [];
-  setProducts(productsArr);
-  setFilteredProducts(productsArr);
+        setProducts(response.data);
+        setFilteredProducts(response.data);
       } catch (err) {
         setError('Failed to load products. Please try again.');
         console.error("Error loading products:", err);

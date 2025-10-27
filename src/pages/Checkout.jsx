@@ -26,7 +26,8 @@ const Checkout = () => {
       if (product.imageUrl.startsWith('http')) {
         return product.imageUrl;
       }
-      return `${import.meta.env.VITE_API_BASE_URL}/${product.imageUrl.replace(/\\/g, '/')}`;
+      const baseUrl = import.meta.env.VITE_API_URL.replace('/api', '');
+      return `${baseUrl}/${product.imageUrl.replace(/\\/g, '/')}`;
     }
     return product.image || '/pet images/collar.jpeg';
   }, []);
@@ -104,9 +105,11 @@ const Checkout = () => {
       console.log('Step 2: Order created successfully with ID:', localOrderId);
 
       console.log('Step 3: Updating payment status...');
-      const response = await api.put(`/orders/${localOrderId}/payment`, {
+      const response = await axios.put(`/api/orders/${localOrderId}/payment`, {
         paypalOrderId: orderData.orderID,
         status: 'COMPLETED'
+      }, {
+        headers: { Authorization: `Bearer ${user.token}` }
       });
 
       console.log('Step 4: Payment status updated successfully:', response.data);
@@ -365,3 +368,4 @@ const Checkout = () => {
 };
 
 export default Checkout;
+

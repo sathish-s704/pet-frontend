@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Button, Spinner, Alert } from 'react-bootstr
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import ReviewCard from '../components/ReviewCard';
-import api from '../utils/api';
+import axios from 'axios';
 
 const MyReviews = () => {
   const { user } = useAuth();
@@ -25,7 +25,12 @@ const MyReviews = () => {
   const fetchMyReviews = async () => {
     setLoading(true);
     try {
-      const response = await api.get(`/reviews/my-reviews?page=${currentPage}`);
+      const response = await axios.get(
+        `/api/reviews/my-reviews?page=${currentPage}`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` }
+        }
+      );
       setReviews(response.data.reviews);
       setTotalPages(response.data.totalPages);
       setError('');

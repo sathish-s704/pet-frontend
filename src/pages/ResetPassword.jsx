@@ -1,13 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 
 const ResetPassword = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [otp, setOtp] = useState('');
+  const [email, setEmail] = useState(location.state?.email || '');
+  const [otp, setOtp] = useState(location.state?.otp || '');
+
+  useEffect(() => {
+    if (!email || !otp) {
+      navigate('/forgot-password');
+    }
+  }, [email, otp, navigate]);
 
   const validatePassword = (password) => {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/;
@@ -34,10 +43,10 @@ const ResetPassword = () => {
       const res = await api.post('/auth/reset-password', {
         email,
         otp,
-        newPassword,
-        confirmPassword
+        newPassword
       });
       alert(res.data.message);
+      navigate('/login');
     } catch (error) {
       alert(error.response?.data?.message || "Something went wrong");
     }
@@ -98,3 +107,4 @@ const ResetPassword = () => {
 };
 
 export default ResetPassword;
+

@@ -60,10 +60,10 @@ const AdminUsers = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      await api.put(`/admin/users/${selectedUser._id}`, {
+      await axios.put(`/api/admin/users/${selectedUser._id}`, {
         role: selectedUser.role,
         isBlocked: selectedUser.isBlocked
-      });
+      }, getAuthConfig());
       
       await fetchUsers();
       setShowModal(false);
@@ -80,7 +80,7 @@ const AdminUsers = () => {
     if (window.confirm(`Are you sure you want to delete user "${userName}"? This action cannot be undone.`)) {
       try {
         setLoading(true);
-        await api.delete(`/admin/users/${userId}`);
+        await axios.delete(`/api/admin/users/${userId}`, getAuthConfig());
         await fetchUsers();
       } catch (err) {
         console.error('Error deleting user:', err);

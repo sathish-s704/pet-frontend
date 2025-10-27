@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import api from '../utils/api';
+import axios from 'axios';
 import { Table, Button, Modal, Form, Row, Col, Alert } from 'react-bootstrap';
 import AdminLayout from '../components/AdminLayout';
 
@@ -108,7 +108,7 @@ function AdminProducts() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        await api.delete(`/products/${id}`);
+        await axios.delete(`/api/products/${id}`, getAuthConfig());
         fetchProducts();
       } catch (err) {
         console.error('Delete error:', err);
@@ -148,7 +148,7 @@ function AdminProducts() {
       });
 
       if (editingProductId) {
-        const response = await api.put(`/products/${editingProductId}`, data);
+        const response = await axios.put(`/api/products/${editingProductId}`, data, getAuthConfig(true));
         console.log('Update response:', response.data);
       } else {
         const response = await api.post('/products', data);
@@ -200,7 +200,7 @@ function AdminProducts() {
             <tr key={product._id}>
               <td>
                 <img 
-                  src={product.imageUrl ? `${import.meta.env.VITE_API_BASE_URL}/${product.imageUrl}` : '/pet images/collar.jpeg'} 
+                  src={product.imageUrl ? `${import.meta.env.VITE_API_URL.replace('/api', '')}/${product.imageUrl}` : '/pet images/collar.jpeg'} 
                   alt={product.name}
                   width="50" 
                   height="50" 

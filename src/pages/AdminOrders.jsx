@@ -56,10 +56,6 @@ const AdminOrders = () => {
     setFilteredOrders(filtered);
   }, [orders, searchTerm, statusFilter]);
 
-  const getAuthConfig = () => ({
-    headers: { Authorization: `Bearer ${user?.token}` }
-  });
-
   const fetchOrders = async () => {
     try {
       setLoading(true);

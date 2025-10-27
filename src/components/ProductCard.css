@@ -1,0 +1,22 @@
+.wishlist-btn:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md) !important;
+}
+
+.wishlist-btn:hover svg {
+  color: var(--primary-color) !important;
+}
+
+.product-image-list {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-lg);
+}
+
+.product-image-list img {
+  transition: transform 0.3s ease;
+}
+
+.product-image-list:hover img {
+  transform: scale(1.05);
+}

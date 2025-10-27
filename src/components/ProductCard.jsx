@@ -2,6 +2,7 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import './ProductCard.css';
 import { 
   Heart, 
   HeartFill, 
@@ -68,7 +69,8 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
         return product.imageUrl;
       }
       // Otherwise, construct the URL from the backend uploads directory
-      return `${import.meta.env.VITE_API_BASE_URL}/${product.imageUrl.replace(/\\/g, '/')}`;
+      const baseUrl = import.meta.env.VITE_API_URL.replace('/api', '');
+      return `${baseUrl}/${product.imageUrl.replace(/\\/g, '/')}`;
     }
     // Fallback to a default image or the image property if it exists
     return product.image || '/pet images/collar.jpeg';
@@ -304,33 +306,9 @@ const ProductCard = ({ product, viewMode = 'grid' }) => {
         </div>
       </div>
 
-      {/* Add custom styles for this component */}
-      <style jsx>{`
-        .wishlist-btn:hover {
-          transform: scale(1.1);
-          box-shadow: var(--shadow-md) !important;
-        }
-        
-        .wishlist-btn:hover svg {
-          color: var(--primary-color) !important;
-        }
-        
-        .product-image-list {
-          position: relative;
-          overflow: hidden;
-          border-radius: var(--border-radius-lg);
-        }
-        
-        .product-image-list img {
-          transition: transform 0.3s ease;
-        }
-        
-        .product-image-list:hover img {
-          transform: scale(1.05);
-        }
-      `}</style>
     </div>
   );
-};
+}
+
 
 export default ProductCard;

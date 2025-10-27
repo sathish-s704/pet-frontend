@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import api from '../utils/api';
 import { Container, Row, Col, Card, Button, Alert, Spinner } from 'react-bootstrap';
+import api from '../utils/api';
 import PayPalButton from '../components/PayPalButton';
 import ErrorBoundary from '../components/ErrorBoundary';
 
@@ -40,7 +40,8 @@ const ProductCheckout = () => {
       if (product.imageUrl.startsWith('http')) {
         return product.imageUrl;
       }
-      return `${import.meta.env.VITE_API_BASE_URL}/${product.imageUrl.replace(/\\/g, '/')}`;
+      const baseUrl = import.meta.env.VITE_API_URL.replace('/api', '');
+      return `${baseUrl}/${product.imageUrl.replace(/\\/g, '/')}`;
     }
     return product.image || '/pet images/collar.jpeg';
   }, []);

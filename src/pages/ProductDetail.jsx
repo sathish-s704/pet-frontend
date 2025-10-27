@@ -6,7 +6,7 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import ProductReviews from '../components/ProductReviews';
-import api from '../utils/api';
+import axios from 'axios';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -26,7 +26,7 @@ const ProductDetail = () => {
   const fetchProduct = async () => {
     setLoading(true);
     try {
-      const response = await api.get(`/products/${id}`);
+      const response = await axios.get(`/api/products/${id}`);
       setProduct(response.data);
       setError('');
     } catch (err) {
@@ -42,7 +42,8 @@ const ProductDetail = () => {
       if (product.imageUrl.startsWith('http')) {
         return product.imageUrl;
       }
-      return `${import.meta.env.VITE_API_BASE_URL}/${product.imageUrl.replace(/\\/g, '/')}`;
+      const baseUrl = import.meta.env.VITE_API_URL.replace('/api', '');
+      return `${baseUrl}/${product.imageUrl.replace(/\\/g, '/')}`;
     }
     return '/pet images/collar.jpeg';
   };

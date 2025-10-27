@@ -18,7 +18,7 @@ import {
 import { Line, Bar } from 'react-chartjs-2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import api from '../utils/api';
+import axios from 'axios';
 
 ChartJS.register(
   CategoryScale,
@@ -61,7 +61,7 @@ const AdminIncome = () => {
   const fetchIncomeData = async () => {
     try {
       setLoading(true);
-      const response = await api.get(`/admin/income?period=${selectedPeriod}`);
+      const response = await axios.get(`/api/admin/income?period=${selectedPeriod}`, getAuthConfig());
       setIncomeData(response.data);
     } catch (err) {
       console.error('Error fetching income data:', err);

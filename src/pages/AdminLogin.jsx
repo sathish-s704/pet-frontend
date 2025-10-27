@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
+import api from '../utils/api';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import api from '../utils/api';
 
 function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -59,3 +59,4 @@ function AdminLogin() {
 }
 
 export default AdminLogin;
+

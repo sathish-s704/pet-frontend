@@ -16,8 +16,7 @@ function Register() {
     e.preventDefault();
     try {
       const res = await api.post('/auth/register', {
-        ...form,
-        role: 'user', // Set default role if required
+        ...form
       });
       alert(res.data.message || 'Registration successful!');
       setForm({ name: '', email: '', password: '' });
@@ -93,3 +92,4 @@ function Register() {
 }
 
 export default Register;
+

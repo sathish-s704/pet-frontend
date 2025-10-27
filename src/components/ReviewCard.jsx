@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, Button, Badge } from 'react-bootstrap';
 import { Star, StarFill, HandThumbsUp, HandThumbsUpFill, Shield } from 'react-bootstrap-icons';
 import { useAuth } from '../context/AuthContext';
-import api from '../utils/api';
+import axios from 'axios';
 
 const ReviewCard = ({ review, onUpdate, showProduct = false }) => {
   const { user } = useAuth();
@@ -38,7 +38,13 @@ const ReviewCard = ({ review, onUpdate, showProduct = false }) => {
 
     setLoading(true);
     try {
-      const response = await api.post(`/reviews/${review._id}/helpful`, {});
+      const response = await axios.post(
+        `/api/reviews/${review._id}/helpful`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${user.token}` }
+        }
+      );
 
       setHelpful(response.data.helpful);
       setHelpfulCount(response.data.helpfulCount);

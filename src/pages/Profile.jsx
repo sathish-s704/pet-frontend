@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Form, Button, Row, Col, Card, Alert, Image, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import api from "../utils/api";
+import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
@@ -30,7 +30,9 @@ const Profile = () => {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      const res = await api.get("/user/profile");
+      const res = await axios.get("/api/user/profile", {
+        headers: { Authorization: `Bearer ${user?.token}` },
+      });
       setProfile(res.data);
       setFormData({
         name: res.data.name || "",
@@ -54,7 +56,9 @@ const Profile = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const res = await api.get("/orders/my");
+      const res = await axios.get("/api/orders/my", {
+        headers: { Authorization: `Bearer ${user?.token}` },
+      });
       setOrders(res.data);
     } catch (err) {
       console.error("Failed to fetch orders", err);
@@ -87,7 +91,9 @@ const Profile = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      await api.put("/user/profile", formData);
+      await axios.put("/api/user/profile", formData, {
+        headers: { Authorization: `Bearer ${user?.token}` },
+      });
       alert("Profile updated successfully!");
       setEditMode(false);
       fetchProfile();
@@ -306,7 +312,7 @@ const Profile = () => {
             <Card>
               <Card.Img 
                 variant="top" 
-                src={product.imageUrl ? `${import.meta.env.VITE_API_BASE_URL}/${product.imageUrl.replace(/\\/g, '/')}` : '/pet images/collar.jpeg'} 
+                src={product.imageUrl ? `${import.meta.env.VITE_API_URL.replace('/api', '')}/${product.imageUrl.replace(/\\/g, '/')}` : '/pet images/collar.jpeg'} 
                 onError={(e) => {
                   e.target.src = '/pet images/collar.jpeg';
                 }}
@@ -371,7 +377,7 @@ const Profile = () => {
                 order.products.map((item, idx) => (
                   <div key={idx} className="mb-3 d-flex align-items-center gap-3">
                     <Image 
-                      src={item.product?.imageUrl ? `${import.meta.env.VITE_API_BASE_URL}/${item.product.imageUrl.replace(/\\/g, '/')}` : '/pet images/collar.jpeg'} 
+                      src={item.product?.imageUrl ? `${import.meta.env.VITE_API_URL.replace('/api', '')}/${item.product.imageUrl.replace(/\\/g, '/')}` : '/pet images/collar.jpeg'} 
                       height={60} 
                       width={60} 
                       thumbnail 
@@ -427,3 +433,4 @@ const Profile = () => {
 };
 
 export default Profile;
+
