@@ -59,7 +59,8 @@ const Profile = () => {
       const res = await axios.get("/api/orders/my", {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
-      setOrders(res.data);
+      // Ensure orders is always an array
+      setOrders(Array.isArray(res.data) ? res.data : res.data.orders || []);
     } catch (err) {
       console.error("Failed to fetch orders", err);
       setError("Failed to load order history");
@@ -107,21 +108,21 @@ const Profile = () => {
 
   const getPaymentStatusBadge = (status) => {
     const statusColors = {
-      'Pending': 'warning',
-      'Paid': 'success',
-      'Failed': 'danger'
+      Pending: "warning",
+      Paid: "success",
+      Failed: "danger",
     };
-    return <Badge bg={statusColors[status] || 'secondary'}>{status}</Badge>;
+    return <Badge bg={statusColors[status] || "secondary"}>{status}</Badge>;
   };
 
   const getDeliveryStatusBadge = (status) => {
     const statusColors = {
-      'Processing': 'info',
-      'Shipped': 'primary',
-      'Delivered': 'success',
-      'Cancelled': 'danger'
+      Processing: "info",
+      Shipped: "primary",
+      Delivered: "success",
+      Cancelled: "danger",
     };
-    return <Badge bg={statusColors[status] || 'secondary'}>{status}</Badge>;
+    return <Badge bg={statusColors[status] || "secondary"}>{status}</Badge>;
   };
 
   if (!user) {
@@ -160,7 +161,7 @@ const Profile = () => {
                 <strong>Name:</strong> {profile.name || "Not set"}
               </Col>
               <Col md={6}>
-                <strong>Email:</strong> {profile.email}
+                <strong>Email:</strong> {profile.email || "Not set"}
               </Col>
             </Row>
             <Row className="mb-3">
@@ -169,7 +170,8 @@ const Profile = () => {
               </Col>
             </Row>
             <div className="mb-3">
-              <strong>Address:</strong><br />
+              <strong>Address:</strong>
+              <br />
               {profile?.address?.street ? (
                 <span>
                   {profile.address.street}, {profile.address.city}, {profile.address.state}, {profile.address.zip}, {profile.address.country}
@@ -190,12 +192,7 @@ const Profile = () => {
               <Row className="mb-3">
                 <Col md={6}>
                   <Form.Label>Name</Form.Label>
-                  <Form.Control 
-                    name="name" 
-                    value={formData.name} 
-                    onChange={handleChange}
-                    required
-                  />
+                  <Form.Control name="name" value={formData.name} onChange={handleChange} required />
                 </Col>
                 <Col md={6}>
                   <Form.Label>Email</Form.Label>
@@ -205,9 +202,9 @@ const Profile = () => {
               <Row className="mb-3">
                 <Col md={6}>
                   <Form.Label>Phone</Form.Label>
-                  <Form.Control 
-                    name="phone" 
-                    value={formData.phone} 
+                  <Form.Control
+                    name="phone"
+                    value={formData.phone}
                     onChange={handleChange}
                     placeholder="Enter phone number"
                   />
@@ -217,9 +214,9 @@ const Profile = () => {
               <Row className="mb-3">
                 <Col md={12}>
                   <Form.Label>Street Address</Form.Label>
-                  <Form.Control 
-                    name="street" 
-                    value={formData.address.street} 
+                  <Form.Control
+                    name="street"
+                    value={formData.address.street}
                     onChange={handleChange}
                     placeholder="Enter street address"
                   />
@@ -228,27 +225,27 @@ const Profile = () => {
               <Row className="mb-3">
                 <Col md={4}>
                   <Form.Label>City</Form.Label>
-                  <Form.Control 
-                    name="city" 
-                    value={formData.address.city} 
+                  <Form.Control
+                    name="city"
+                    value={formData.address.city}
                     onChange={handleChange}
                     placeholder="Enter city"
                   />
                 </Col>
                 <Col md={4}>
                   <Form.Label>State</Form.Label>
-                  <Form.Control 
-                    name="state" 
-                    value={formData.address.state} 
+                  <Form.Control
+                    name="state"
+                    value={formData.address.state}
                     onChange={handleChange}
                     placeholder="Enter state"
                   />
                 </Col>
                 <Col md={4}>
                   <Form.Label>ZIP Code</Form.Label>
-                  <Form.Control 
-                    name="zip" 
-                    value={formData.address.zip} 
+                  <Form.Control
+                    name="zip"
+                    value={formData.address.zip}
                     onChange={handleChange}
                     placeholder="Enter ZIP code"
                   />
@@ -257,9 +254,9 @@ const Profile = () => {
               <Row className="mb-3">
                 <Col md={6}>
                   <Form.Label>Country</Form.Label>
-                  <Form.Control 
-                    name="country" 
-                    value={formData.address.country} 
+                  <Form.Control
+                    name="country"
+                    value={formData.address.country}
                     onChange={handleChange}
                     placeholder="Enter country"
                   />
@@ -283,64 +280,73 @@ const Profile = () => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>❤️ Wishlist</h4>
         <div className="d-flex gap-2">
-          <Button 
+          <Button
             onClick={() => {
               if (!user) {
-                alert('Please login to add items to cart!');
+                alert("Please login to add items to cart!");
                 return;
               }
-              wishlist.forEach(product => {
-                if (product.inStock) {
-                  cartDispatch({ type: 'ADD_TO_CART', payload: product });
-                }
-              });
-              alert('All in-stock items added to cart!');
+              Array.isArray(wishlist) &&
+                wishlist.forEach((product) => {
+                  if (product.inStock) {
+                    cartDispatch({ type: "ADD_TO_CART", payload: product });
+                  }
+                });
+              alert("All in-stock items added to cart!");
             }}
-            variant="outline-success" 
+            variant="outline-success"
             size="sm"
           >
             Move All to Cart
           </Button>
           <Button as={Link} to="/wishlist" variant="outline-primary" size="sm">
-            View All ({wishlist.length})
+            View All ({Array.isArray(wishlist) ? wishlist.length : 0})
           </Button>
         </div>
       </div>
       <Row>
-        {wishlist.length > 0 ? wishlist.slice(0, 3).map(product => (
-          <Col md={4} key={product._id} className="mb-3">
-            <Card>
-              <Card.Img 
-                variant="top" 
-                src={product.imageUrl ? `${import.meta.env.VITE_API_URL.replace('/api', '')}/${product.imageUrl.replace(/\\/g, '/')}` : '/pet images/collar.jpeg'} 
-                onError={(e) => {
-                  e.target.src = '/pet images/collar.jpeg';
-                }}
-              />
-              <Card.Body>
-                <Card.Title>{product.name}</Card.Title>
-                <Card.Text>₹{product.price}</Card.Text>
-                <Button
-                  onClick={() => {
-                    if (!user) {
-                      alert('Please login to add items to cart!');
-                      return;
-                    }
-                    cartDispatch({ type: 'ADD_TO_CART', payload: product });
-                    alert('Added to cart!');
+        {Array.isArray(wishlist) && wishlist.length > 0 ? (
+          wishlist.slice(0, 3).map((product) => (
+            <Col md={4} key={product._id} className="mb-3">
+              <Card>
+                <Card.Img
+                  variant="top"
+                  src={
+                    product.imageUrl
+                      ? `${import.meta.env.VITE_API_URL.replace("/api", "")}/${product.imageUrl.replace(/\\/g, "/")}`
+                      : "/pet images/collar.jpeg"
+                  }
+                  onError={(e) => {
+                    e.target.src = "/pet images/collar.jpeg";
                   }}
-                  variant="outline-primary"
-                  size="sm"
-                  className="w-100"
-                  disabled={!product.inStock}
-                >
-                  {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        )) : <p>No items in wishlist.</p>}
-        {wishlist.length > 3 && (
+                />
+                <Card.Body>
+                  <Card.Title>{product.name}</Card.Title>
+                  <Card.Text>₹{product.price}</Card.Text>
+                  <Button
+                    onClick={() => {
+                      if (!user) {
+                        alert("Please login to add items to cart!");
+                        return;
+                      }
+                      cartDispatch({ type: "ADD_TO_CART", payload: product });
+                      alert("Added to cart!");
+                    }}
+                    variant="outline-primary"
+                    size="sm"
+                    className="w-100"
+                    disabled={!product.inStock}
+                  >
+                    {product.inStock ? "Add to Cart" : "Out of Stock"}
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))
+        ) : (
+          <p>No items in wishlist.</p>
+        )}
+        {Array.isArray(wishlist) && wishlist.length > 3 && (
           <Col md={12} className="text-center">
             <Button as={Link} to="/wishlist" variant="outline-primary">
               View All {wishlist.length} Items
@@ -352,8 +358,8 @@ const Profile = () => {
       <hr className="my-4" />
 
       <h4>🧾 My Orders</h4>
-      {orders.length > 0 ? (
-        orders.map(order => (
+      {Array.isArray(orders) && orders.length > 0 ? (
+        orders.map((order) => (
           <Card key={order._id} className="mb-3">
             <Card.Header className="d-flex justify-content-between align-items-center">
               <div>
@@ -364,29 +370,31 @@ const Profile = () => {
                 </small>
               </div>
               <div className="text-end">
-                <div className="mb-1">
-                  {getPaymentStatusBadge(order.paymentStatus)}
-                </div>
-                <div>
-                  {getDeliveryStatusBadge(order.deliveryStatus)}
-                </div>
+                <div className="mb-1">{getPaymentStatusBadge(order.paymentStatus)}</div>
+                <div>{getDeliveryStatusBadge(order.deliveryStatus)}</div>
               </div>
             </Card.Header>
             <Card.Body>
-              {order.products && order.products.length > 0 ? (
+              {Array.isArray(order.products) && order.products.length > 0 ? (
                 order.products.map((item, idx) => (
                   <div key={idx} className="mb-3 d-flex align-items-center gap-3">
-                    <Image 
-                      src={item.product?.imageUrl ? `${import.meta.env.VITE_API_URL.replace('/api', '')}/${item.product.imageUrl.replace(/\\/g, '/')}` : '/pet images/collar.jpeg'} 
-                      height={60} 
-                      width={60} 
-                      thumbnail 
+                    <Image
+                      src={
+                        item.product?.imageUrl
+                          ? `${import.meta.env.VITE_API_URL.replace("/api", "")}/${item.product.imageUrl.replace(/\\/g, "/")}`
+                          : "/pet images/collar.jpeg"
+                      }
+                      height={60}
+                      width={60}
+                      thumbnail
                       onError={(e) => {
-                        e.target.src = '/pet images/collar.jpeg';
+                        e.target.src = "/pet images/collar.jpeg";
                       }}
                     />
                     <div className="flex-grow-1">
-                      <div><strong>{item.product?.name || 'Product'}</strong></div>
+                      <div>
+                        <strong>{item.product?.name || "Product"}</strong>
+                      </div>
                       <div className="text-muted">
                         Quantity: {item.quantity} × ₹{item.product?.price || 0}
                       </div>
@@ -433,4 +441,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
