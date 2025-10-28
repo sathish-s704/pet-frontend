@@ -6,7 +6,7 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import ProductReviews from '../components/ProductReviews';
-import axios from 'axios';
+import api from '../utils/api';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -275,3 +275,4 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+

@@ -18,7 +18,7 @@ import {
 import { Line, Bar } from 'react-chartjs-2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import axios from 'axios';
+import api from '../utils/api';
 
 ChartJS.register(
   CategoryScale,

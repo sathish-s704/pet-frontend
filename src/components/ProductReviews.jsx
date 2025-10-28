@@ -4,7 +4,7 @@ import { Star, StarFill, Plus } from 'react-bootstrap-icons';
 import { useAuth } from '../context/AuthContext';
 import ReviewCard from './ReviewCard';
 import ReviewForm from './ReviewForm';
-import axios from 'axios';
+import api from '../utils/api';
 
 const ProductReviews = ({ productId, productName, averageRating, reviewCount, ratingDistribution }) => {
   const { user } = useAuth();
@@ -24,9 +24,7 @@ const ProductReviews = ({ productId, productName, averageRating, reviewCount, ra
   const fetchReviews = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `/api/reviews/product/${productId}?page=${currentPage}&sortBy=${sortBy}`
-      );
+      const response = await api.reviews.getProductReviews(productId, currentPage, sortBy);
       setReviews(response.data.reviews);
       setTotalPages(response.data.totalPages);
       setError('');
@@ -41,21 +39,9 @@ const ProductReviews = ({ productId, productName, averageRating, reviewCount, ra
   const handleSubmitReview = async (reviewData) => {
     try {
       if (editingReview) {
-        await axios.put(
-          `/api/reviews/${editingReview._id}`,
-          reviewData,
-          {
-            headers: { Authorization: `Bearer ${user.token}` }
-          }
-        );
+        await api.reviews.updateReview(editingReview._id, reviewData);
       } else {
-        await axios.post(
-          `/api/reviews/product/${productId}`,
-          reviewData,
-          {
-            headers: { Authorization: `Bearer ${user.token}` }
-          }
-        );
+        await api.reviews.createReview(productId, reviewData);
       }
       
       fetchReviews();
@@ -248,3 +234,4 @@ const ProductReviews = ({ productId, productName, averageRating, reviewCount, ra
 };
 
 export default ProductReviews;
+

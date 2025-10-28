@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Button, Spinner, Alert } from 'react-bootstr
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import ReviewCard from '../components/ReviewCard';
-import axios from 'axios';
+import api from '../utils/api';
 
 const MyReviews = () => {
   const { user } = useAuth();
@@ -25,18 +25,17 @@ const MyReviews = () => {
   const fetchMyReviews = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `/api/reviews/my-reviews?page=${currentPage}`,
-        {
-          headers: { Authorization: `Bearer ${user.token}` }
-        }
-      );
-      setReviews(response.data.reviews);
-      setTotalPages(response.data.totalPages);
+      const response = await api.reviews.getMyReviews(currentPage);
+
+      const fetchedReviews = Array.isArray(response.data.reviews) ? response.data.reviews : [];
+      setReviews(fetchedReviews);
+      setTotalPages(response.data.totalPages || 1);
       setError('');
     } catch (err) {
-      setError('Error loading your reviews');
       console.error('Error fetching user reviews:', err);
+      setError('Error loading your reviews');
+      setReviews([]);
+      setTotalPages(1);
     } finally {
       setLoading(false);
     }
@@ -70,7 +69,7 @@ const MyReviews = () => {
             </div>
           )}
 
-          {!loading && reviews.length === 0 && (
+          {!loading && Array.isArray(reviews) && reviews.length === 0 && (
             <Card className="text-center py-5">
               <Card.Body>
                 <h5>No Reviews Yet</h5>
@@ -84,7 +83,7 @@ const MyReviews = () => {
             </Card>
           )}
 
-          {!loading && reviews.length > 0 && (
+          {!loading && Array.isArray(reviews) && reviews.length > 0 && (
             <>
               {reviews.map((review) => (
                 <ReviewCard
@@ -92,8 +91,13 @@ const MyReviews = () => {
                   review={review}
                   showProduct={true}
                   onUpdate={() => {
-                    // Navigate to product page where user can edit review
-                    navigate(`/product/${review.product._id}`);
+                    // Navigate to product page using product ID
+                    const productId = review.product?._id;
+                    if (productId) {
+                      navigate(`/product/${productId}`);
+                    } else {
+                      alert('Product not found');
+                    }
                   }}
                 />
               ))}
@@ -130,3 +134,4 @@ const MyReviews = () => {
 };
 
 export default MyReviews;
+

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, Button, Badge } from 'react-bootstrap';
 import { Star, StarFill, HandThumbsUp, HandThumbsUpFill, Shield } from 'react-bootstrap-icons';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../utils/api';
 
 const ReviewCard = ({ review, onUpdate, showProduct = false }) => {
   const { user } = useAuth();
@@ -132,3 +132,4 @@ const ReviewCard = ({ review, onUpdate, showProduct = false }) => {
 };
 
 export default ReviewCard;
+

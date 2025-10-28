@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { Table, Button, Modal, Form, Row, Col, Alert } from 'react-bootstrap';
 import AdminLayout from '../components/AdminLayout';
 
@@ -408,3 +408,4 @@ function AdminProducts() {
 }
 
 export default AdminProducts;
+
